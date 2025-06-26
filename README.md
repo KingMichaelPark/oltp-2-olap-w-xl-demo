@@ -37,6 +37,7 @@ graph TD
     D -- Transform Step 1 --> E[Excel Workbook: Intermediate Data];
     E -- Transform Step 2 --> F[Excel Workbook: Final Report];
     C -- dbt Project --> G[OLAP Database: Transformed Data Layer];
+    G -- Data Visualization --> H[Tableau: Data Visualization Layer];
 
     subgraph Transformation Paths
         D --- E;
