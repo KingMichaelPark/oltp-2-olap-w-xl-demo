@@ -32,16 +32,6 @@ def create_duckdb_table_and_insert_data(data):
     # Connect to DuckDB. It will create the file if it doesn't exist.
     con = duckdb.connect(database=DUCKDB_DATABASE_NAME, read_only=False)
     
-    # Create the table with date as DATE type and rate as DOUBLE
-    # DuckDB's DATE type can parse 'YYYY-MM-DD' strings automatically.
-    con.execute(f"""
-        CREATE TABLE IF NOT EXISTS {MORTGAGE_RATES_TABLE_NAME} (
-            date DATE,
-            rate DOUBLE
-        )
-    """)
-    print(f"Ensured table '{MORTGAGE_RATES_TABLE_NAME}' exists in DuckDB '{DUCKDB_DATABASE_NAME}'.")
-
     # For CDC simulation, we might want to handle existing data.
     # A simple approach for this script is to clear the table first if it's a full reload.
     # Or, use INSERT OR REPLACE or handle conflicts if primary keys were defined.
