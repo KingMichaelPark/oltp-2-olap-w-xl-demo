@@ -1,10 +1,15 @@
 import duckdb
 import os
 
-DUCKDB_DATABASE_NAME = 'homes_olap.duckdb'
-SOURCE_TABLE_NAME = 'mortgage_rates'  # The original table with raw rates
-DBT_MODEL_TABLE_NAME = 'dbt_mortgage_rates_report'  # The new table this script will create/replace
-DBT_AGGREGATE_VIEW_NAME = 'dbt_average_adjusted_rate_view' # The new view for the average
+DUCKDB_DATABASE_NAME = "homes_olap.duckdb"
+SOURCE_TABLE_NAME = "mortgage_rates"  # The original table with raw rates
+DBT_MODEL_TABLE_NAME = (
+    "dbt_mortgage_rates_report"  # The new table this script will create/replace
+)
+DBT_AGGREGATE_VIEW_NAME = (
+    "dbt_average_adjusted_rate_view"  # The new view for the average
+)
+
 
 def run_dbt_mock_transformation():
     """
@@ -13,7 +18,9 @@ def run_dbt_mock_transformation():
     """
     if not os.path.exists(DUCKDB_DATABASE_NAME):
         print(f"Error: DuckDB database '{DUCKDB_DATABASE_NAME}' not found.")
-        print("Please ensure 'cdc_to_duckdb.py' has been run successfully to create it.")
+        print(
+            "Please ensure 'cdc_to_duckdb.py' has been run successfully to create it."
+        )
         return
 
     con = None
@@ -30,12 +37,16 @@ def run_dbt_mock_transformation():
             con.execute(f"SELECT 1 FROM {SOURCE_TABLE_NAME} LIMIT 1;")
         except duckdb.CatalogException:
             # A more robust check:
-            tables_in_db = con.execute("SELECT table_name FROM information_schema.tables WHERE table_name = ?", [SOURCE_TABLE_NAME.lower()]).fetchall()
+            tables_in_db = con.execute(
+                "SELECT table_name FROM information_schema.tables WHERE table_name = ?",
+                [SOURCE_TABLE_NAME.lower()],
+            ).fetchall()
             if not tables_in_db:
-                print(f"Error: Source table '{SOURCE_TABLE_NAME}' not found in DuckDB database '{DUCKDB_DATABASE_NAME}'.")
+                print(
+                    f"Error: Source table '{SOURCE_TABLE_NAME}' not found in DuckDB database '{DUCKDB_DATABASE_NAME}'."
+                )
                 print("Please ensure 'cdc_to_duckdb.py' has run and populated it.")
                 return
-
 
         # SQL to create the new table with the transformation.
         # CREATE OR REPLACE TABLE is idempotent: it creates the table or replaces it if it exists.
@@ -53,9 +64,13 @@ def run_dbt_mock_transformation():
             {SOURCE_TABLE_NAME};
         """
 
-        print(f"Executing SQL transformation to create or replace table '{DBT_MODEL_TABLE_NAME}'...")
+        print(
+            f"Executing SQL transformation to create or replace table '{DBT_MODEL_TABLE_NAME}'..."
+        )
         con.execute(sql_transform)
-        print(f"Successfully created/replaced table '{DBT_MODEL_TABLE_NAME}' with transformed data.")
+        print(
+            f"Successfully created/replaced table '{DBT_MODEL_TABLE_NAME}' with transformed data."
+        )
 
         # SQL to create or replace the view for the average adjusted rate.
         # This runs after the DBT_MODEL_TABLE_NAME has been created/updated.
@@ -76,7 +91,7 @@ def run_dbt_mock_transformation():
         # for row in result:
         #     print(row)
 
-    except duckdb.Error as e: # Catch DuckDB specific errors
+    except duckdb.Error as e:  # Catch DuckDB specific errors
         print(f"A DuckDB error occurred: {e}")
     except Exception as e:
         print(f"An unexpected error occurred: {e}")
@@ -85,6 +100,7 @@ def run_dbt_mock_transformation():
             con.close()
             print("Disconnected from DuckDB.")
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     run_dbt_mock_transformation()
     print("\nDBT mock script execution complete.")
