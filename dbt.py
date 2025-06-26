@@ -4,6 +4,7 @@ import os
 DUCKDB_DATABASE_NAME = 'homes_olap.duckdb'
 SOURCE_TABLE_NAME = 'mortgage_rates'  # The original table with raw rates
 DBT_MODEL_TABLE_NAME = 'dbt_mortgage_rates_report'  # The new table this script will create/replace
+DBT_AGGREGATE_VIEW_NAME = 'dbt_average_adjusted_rate_view' # The new view for the average
 
 def run_dbt_mock_transformation():
     """
@@ -55,6 +56,19 @@ def run_dbt_mock_transformation():
         print(f"Executing SQL transformation to create or replace table '{DBT_MODEL_TABLE_NAME}'...")
         con.execute(sql_transform)
         print(f"Successfully created/replaced table '{DBT_MODEL_TABLE_NAME}' with transformed data.")
+
+        # SQL to create or replace the view for the average adjusted rate.
+        # This runs after the DBT_MODEL_TABLE_NAME has been created/updated.
+        sql_create_view = f"""
+        CREATE OR REPLACE VIEW {DBT_AGGREGATE_VIEW_NAME} AS
+        SELECT
+            AVG(adjusted_rate) AS average_adjusted_rate
+        FROM
+            {DBT_MODEL_TABLE_NAME};
+        """
+        print(f"Executing SQL to create or replace view '{DBT_AGGREGATE_VIEW_NAME}'...")
+        con.execute(sql_create_view)
+        print(f"Successfully created/replaced view '{DBT_AGGREGATE_VIEW_NAME}'.")
 
         # Optional: You can uncomment these lines to verify by fetching and printing a few rows
         # print(f"\nSample data from '{DBT_MODEL_TABLE_NAME}':")
