@@ -79,14 +79,11 @@ graph TD
 
     ```bash
     uv sync
+    source .venv/bin/activate
     ```
 
-3.  **Database Configuration:**
 
-    - Configure connection strings for your OLTP and OLAP databases in `config.py` (or similar file).
-    - Ensure your `dbt_project.yml` and `profiles.yml` are correctly set up for your OLAP database.
-
-4.  **Seed Initial Data (OLTP):**
+3.  **Seed Initial Data (OLTP):**
     Run the script to populate your OLTP database with sample data.
     ```bash
     python scripts/populate_oltp.py
