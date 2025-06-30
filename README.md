@@ -18,7 +18,7 @@ leveraging dbt (data build tool) for in-database transformations.
   - Export raw data from the OLAP database to an Excel workbook.
   - Demonstrate multi-step data transformations within Excel (e.g., using
     Python scripts to manipulate the Excel file).
-- **dbt for In-Database Transformation**:
+- **fake/mock dbt for In-Database Transformation**:
   - Showcase how dbt can be used to build analytical models directly within the
     OLAP database.
   - Create materialized views or tables based on transformations, ensuring data
