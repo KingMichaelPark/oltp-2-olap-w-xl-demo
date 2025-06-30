@@ -63,7 +63,6 @@ graph TD
 - `uv` installed: `pip install uv` (or `python -m pip install uv`)
 - Access to an OLTP database (e.g., a local PostgreSQL instance).
 - Access to an OLAP database (e.g., a local DuckDB file or cloud warehouse credentials).
-- dbt CLI installed and configured for your OLAP database.
 - Microsoft Excel (if running the Excel transformation path).
 
 ### Project Setup
